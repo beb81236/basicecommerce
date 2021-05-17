@@ -69,7 +69,7 @@ exports.handleInitiatePayment = async (req, res, next) => {
       body,
       config
     );
-    console.log(response);
+    // console.log(response);
     response = response.data;
     res
       .status(200)
@@ -144,7 +144,7 @@ exports.handlePaymentNotification = async (req, res, next) => {
       payment_info: verification.data,
     });
     let payment = await newPayment.save();
-    user.payments.push(payment._id);
+    user.payment.push(payment._id);
     await user.save();
     console.log("Transaction completed");
   } catch (error) {
