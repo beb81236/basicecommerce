@@ -81,7 +81,7 @@ exports.handleInitiatePayment = async (req, res, next) => {
 };
 
 // https://developer.flutterwave.com/docs/events
-exports.handleInitiatePayment = async (req, res, next) => {
+exports.handlePaymentNotification = async (req, res, next) => {
   try {
     res.sendStatus(200); //return a status code to FLW
     const mySecreteHash = "12345656hgngjngkg"; //must be the same hash with the one on the dashboard
