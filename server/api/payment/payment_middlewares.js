@@ -1,6 +1,6 @@
 const Axios = require("axios");
 const Crypto = require("crypto");
-const { UserModel } = require("../../models/Index");
+const { UserModel, PaymentModel } = require("../../models/Index");
 let FLUTTERWAVE_PUBLIC_KEY;
 let FLUTTERWAVE_SECRETE_KEY;
 
@@ -77,5 +77,77 @@ exports.handleInitiatePayment = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.json(error);
+  }
+};
+
+// https://developer.flutterwave.com/docs/events
+exports.handleInitiatePayment = async (req, res, next) => {
+  try {
+    res.sendStatus(200); //return a status code to FLW
+    const mySecreteHash = "12345656hgngjngkg"; //must be the same hash with the one on the dashboard
+
+    // get hash from the req.header
+    const hash = req.headers["verif-hash"];
+    if (!hash) {
+      console.log("No Hash");
+      return;
+    }
+    if (hash !== mySecreteHash) {
+      console.log(`Unverifief transaction noticed`);
+      return;
+    }
+
+    // retrieve request body/payment information
+    const requestBody = req.body;
+
+    // you might want to re-verify if the transaction is indeed legit
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${FLUTTERWAVE_SECRETE_KEY}`,
+      },
+    };
+
+    // https://developer.flutterwave.com/docs/transaction-verification
+    let verification = await Axios.get(
+      `https://api.flutterwave.com/v3/transactions/${requestBody.data.id}/verify`,
+      config
+    );
+
+    verification = verification.data;
+    // Verify the status of the transaction to be successful.
+    if (verification.status !== "success") {
+      // Not a valid transaction
+      console.log("Not a valid transaction");
+      return;
+    }
+
+    // Verify the transaction reference and Verify the currency to be the expected currency.
+    if (
+      requestBody.data.tx_ref !== verification.data.tx_ref ||
+      verification.data.currency !== "NGN"
+    ) {
+      // Not a valid transaction
+      console.log(`Not a legit transaction`);
+      return;
+    }
+    const user = await UserModel.findById(verification.data.meta.user_id);
+    if (!user) {
+      console.log(`User not found`);
+      return;
+    }
+
+    const newPayment = new PaymentModel({
+      user_id: user._id,
+      status: verification.data.status,
+      reference: verification.data.tx_ref,
+      payment_info: verfication.data,
+    });
+    let payment = await newPayment.save();
+    user.payments.push(payment._id);
+    await user.save();
+    console.log("Transaction completed");
+  } catch (error) {
+    console.log(error);
   }
 };
