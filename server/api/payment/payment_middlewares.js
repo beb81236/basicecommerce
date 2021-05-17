@@ -141,7 +141,7 @@ exports.handlePaymentNotification = async (req, res, next) => {
       user_id: user._id,
       status: verification.data.status,
       reference: verification.data.tx_ref,
-      payment_info: verfication.data,
+      payment_info: verification.data,
     });
     let payment = await newPayment.save();
     user.payments.push(payment._id);
