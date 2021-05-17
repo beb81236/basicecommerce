@@ -40,7 +40,7 @@ exports.handleInitiatePayment = async (req, res, next) => {
       redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
       payment_options: "card",
       meta: {
-        consumer_id: user._id,
+        user_id: user._id,
       },
       customer: {
         email: user.email,
