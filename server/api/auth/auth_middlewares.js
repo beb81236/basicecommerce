@@ -111,7 +111,7 @@ exports.handleUserLogin = async (req, res, next) => {
 
     // check to see if a user is verified
     if (!user.isVerified) {
-      return res.status(401).json({ message: "Invalid login credentials" });
+      return res.status(401).json({ message: "Please verify your account." });
     }
 
     // Match password
