@@ -50,7 +50,7 @@ exports.handleUserRegistration = async (req, res, next) => {
     let options = {
       to: email,
       subject: "Verify your Email address",
-      link: `http://localhost:5000/api/auth/verifyemail/${verification_token}`,
+      link: `http://localhost:3000/verifyemail/${verification_token}`,
     };
 
     // send verification tokens to user

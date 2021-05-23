@@ -1,8 +1,8 @@
 
 import Axios from 'axios';
-import {REGISTER_FAIL,REGISTER_SUCCESS,LOGIN_FAIL,LOGIN_SUCCESS} from './types'
+import {REGISTER_FAIL,REGISTER_SUCCESS,LOGIN_FAIL,LOGIN_SUCCESS,VERIFY_EMAIL_FAIL,VERIFY_EMAIL_SUCCESS} from './types'
 
-let baseURL = 'https://basic-ecommerce-be.herokuapp.com'
+let baseURL = 'https://basic-ecommerce-be.herokuapp.com/'
 let config = {
     headers:{
         "Content-Type":"application/json"
@@ -14,7 +14,7 @@ export const HandleUserRegistration =(data)=> async (dispatch)=>{
 
         const body = JSON.stringify(data);
 
-        let response = await Axios.post(`${baseURL}/api/auth/register`, body,config);
+        let response = await Axios.post(baseURL + `api/auth/register`, body,config);
 
         response = response.data;
 
@@ -46,7 +46,7 @@ export const HandleUserLogin = (data) => async (dispatch)=>{
     try {
 
         let body = JSON.stringify(data);
-        let response = await Axios.post(`${baseURL}/api/auth/login`, body,config);
+        let response = await Axios.post(baseURL + `api/auth/login`, body,config);
 
         response = response.data;
 
@@ -72,3 +72,32 @@ export const HandleUserLogin = (data) => async (dispatch)=>{
 
     }
 };
+
+export const HandleEmailVerification =(token)=> async (dispatch)=>{
+    try {
+
+        let response = await Axios.post(baseURL + `api/auth/verifyemail/${token}`,config);
+        response= response.data;
+        
+
+        return dispatch({
+            type:VERIFY_EMAIL_SUCCESS,
+            payload:{
+                type:'verify-email-success',
+                info:response.message
+            }
+        })
+        
+        
+    } catch (error) {
+        error = error.response.data;
+
+        return dispatch({
+            type:VERIFY_EMAIL_FAIL,
+            payload:{
+                type:'verify-email-fail',
+                info:error.message
+            }
+        })
+    }
+}

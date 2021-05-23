@@ -1,4 +1,5 @@
-import { REGISTER_FAIL, REGISTER_SUCCESS,LOGIN_FAIL,LOGIN_SUCCESS } from "../action/types";
+import { REGISTER_FAIL, REGISTER_SUCCESS,LOGIN_FAIL,
+  LOGIN_SUCCESS,VERIFY_EMAIL_FAIL,VERIFY_EMAIL_SUCCESS } from "../action/types";
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: false,
@@ -10,6 +11,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
+    case VERIFY_EMAIL_SUCCESS:
     case REGISTER_SUCCESS:
       return {
         ...state,
@@ -17,6 +20,7 @@ export default (state = initialState, action) => {
         error_message:null
       };
 
+    case VERIFY_EMAIL_FAIL:
     case LOGIN_FAIL:
     case REGISTER_FAIL:
       return {

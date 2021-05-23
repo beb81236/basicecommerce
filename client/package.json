@@ -32,6 +32,7 @@
       "react-app/jest"
     ]
   },
+  "proxy":"https://basic-ecommerce-be.herokuapp.com/",
   "browserslist": {
     "production": [
       ">0.2%",
