@@ -37,7 +37,7 @@ exports.handleInitiatePayment = async (req, res, next) => {
       tx_ref: Crypto.randomBytes(16).toString("hex"),
       amount: amount,
       currency: "NGN",
-      redirect_url: "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+      redirect_url: "http://localhost:3000/user/dashboard",
       payment_options: "card",
       meta: {
         user_id: user._id,

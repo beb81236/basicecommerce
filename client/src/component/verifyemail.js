@@ -33,7 +33,7 @@ const Verifyemail = ({success_message,error_message}) => {
 
     useEffect(()=>{
 
-        if(success_message && success_message.type ==='verify-email-success'){
+        if(success_message && success_message.type === 'verify-email-success'){
             setMessage(success_message)
         }
 
